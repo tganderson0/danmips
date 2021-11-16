@@ -211,3 +211,132 @@ var runcode = function() {
   }
   updateRegisters();
 }
+
+var getNbitBinary = function(num, bits){
+  let result = num.toString(2);
+  while (result.length < bits){
+    result = "0" + result;
+  }
+  return result;
+}
+
+var convertLineToBinary = function(line, lineNumber){
+  currentLine = line.replace(/,/g, '').trim().split(' ');
+  let binaryOut = "";
+  switch(currentLine[0]){
+    // RTYPE
+    case('add'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      reg2 = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0000";
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(reg2, 3);
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += "010";
+      break;
+    case('sub'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      reg2 = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0000";
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(reg2, 3);
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += "110";
+      break;
+    case('and'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      reg2 = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0000";
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(reg2, 3);
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += "000";
+      break;
+    case('or'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      reg2 = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0000";
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(reg2, 3);
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += "001";
+      break;
+    case('slt'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      reg2 = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0001";
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(reg2, 3);
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += "111";
+      break;
+    // I TYPE ////////////////
+    case('lw'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      immediate = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0010";
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(immediate, 6);
+      binaryOut += "010";
+      break;
+    case('sw'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      immediate = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0011";
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(immediate, 6);
+      binaryOut += "010";
+      break;
+    case('beq'):
+      reg1 = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg2 = Number.parseInt(currentLine[2].replace('$t', ''));
+      loc = lines.indexOf(currentLine[3]);
+      difference = (lineNumber - loc) // This gets the number of lines we should move back, with the modification to make it 4
+      binaryOut += "0100";
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(reg2, 3);
+      binaryOut += getNbitBinary(difference, 6);
+      binaryOut += "110";
+      break;
+    case('j'):
+      loc = lines.indexOf(currentLine[1]);
+      difference = (lineNumber - loc);
+      binaryOut += "0101";
+      binaryOut += getNbitBinary(difference, 12);
+      break;
+    case('addi'):
+      regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+      reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
+      immediate = Number.parseInt(currentLine[3].replace('$t', ''));
+      binaryOut += "0111";
+      binaryOut += getNbitBinary(regDes, 3);
+      binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(immediate, 6);
+      binaryOut += "010";
+      break;
+    default:
+      break;
+  }
+  return binaryOut;
+}
+
+var convertCommandsToBinary = function(){
+  let lines = inputCode.value.split('\n');
+  let ul = document.querySelector("#binaryOutput");
+  ul.innerHTML = ''; // Remove old output
+  for (const [indx, val] of lines.entries()) {
+    let lineBinary = convertLineToBinary(val, indx);
+    let li = document.createElement('li');
+    li.textContent = lineBinary;
+    ul.insertBefore(li, ul.firstChild);
+  }
+}

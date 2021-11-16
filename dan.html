@@ -11,6 +11,7 @@
       <div id="code-section" class="section">
         <textarea id="code-input" rows="32" spellcheck="false"></textarea>
         <button id="run" onclick="runcode()">Run</button>
+        <button id="convert" onclick="convertCommandsToBinary()">Convert Binary</button>
       </div>
   
       <div id="output-section" class="section">
@@ -40,7 +41,10 @@
         <li>addi destReg, reg1, immediate</li>
       </ul>
       <p>Please note, for loading and storing, the program will be angry if you don't do offsets in multiples of 4</p>
-
+      
+      <h2>Binary Output WIP</h2>
+      <ul id="binaryOutput">
+      </ul>
 
     <script src="script.js"></script>
   </body>
