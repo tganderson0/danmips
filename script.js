@@ -20,6 +20,13 @@ poutputs.push(document.querySelector('#t5'));
 poutputs.push(document.querySelector('#t6'));
 poutputs.push(document.querySelector('#t7'));
 
+var get16bitBinary = function(value){
+  let result = value.toString(2);
+  while (result.length < 16){
+    result = "0" + result;
+  }
+  return result;
+}
 
 // R-type operations ///////////////////////////////////////////////
 var add = function(regDesIdx, reg1Idx, reg2Idx) {
@@ -35,20 +42,15 @@ var sub = function(regDesIdx, reg1Idx, reg2Idx) {
 var and = function(regDesIdx, reg1Idx, reg2Idx) {
   if (regDesIdx === 0) return;
   // First get the binary repr of the numbers
-  let reg1val = registerValues[reg1Idx].toString(2);
-  let reg2val = registerValues[reg2Idx].toString(2);
+  let reg1val = get16bitBinary(registerValues[reg1Idx]);
+  let reg2val = get16bitBinary(registerValues[reg2Idx]);
 
-  // Sign extend if needed
-  while (reg1val < reg2val){
-    reg1val = '0' + reg1val;
-  }
-  while (reg2val < reg1val){
-    reg2val = '0' + reg2val;
-  }
+  console.log(reg1val);
+  console.log(reg2val);
 
   let result = '';
   for (let i = 0; i < reg1val.length; i++) {
-    if (reg1val[i] && reg2val[i]){
+    if (reg1val[i] === '1' && reg2val[i] === '1'){
       result += '1';
     }
     else{
@@ -63,20 +65,15 @@ var and = function(regDesIdx, reg1Idx, reg2Idx) {
 var or = function(regDesIdx, reg1Idx, reg2Idx) {
   if (regDesIdx === 0) return;
   // First get the binary repr of the numbers
-  let reg1val = registerValues[reg1Idx].toString(2);
-  let reg2val = registerValues[reg2Idx].toString(2);
+  let reg1val = get16bitBinary(registerValues[reg1Idx]);
+  let reg2val = get16bitBinary(registerValues[reg2Idx]);
 
-  // Sign extend if needed
-  while (reg1val < reg2val){
-    reg1val = '0' + reg1val;
-  }
-  while (reg2val < reg1val){
-    reg2val = '0' + reg2val;
-  }
+  console.log(reg1val);
+  console.log(reg2val);
 
   let result = '';
   for (let i = 0; i < reg1val.length; i++) {
-    if (reg1val[i] || reg2val[i]){
+    if (reg1val[i] === '1' || reg2val[i] === '1'){
       result += '1';
     }
     else{
@@ -122,9 +119,11 @@ var addImmediate = function(regDesIdx, regIdx, immediateVal){
 }
 
 
+
 var updateRegisters = function(){
+  // Largest 16 bit number is 6 digits
   for (const [indx, val] of poutputs.entries()) {
-    val.textContent = `$${indx}: ${registerValues[indx]}`;
+    val.textContent = `$${indx}: ${get16bitBinary(registerValues[indx])} | ${registerValues[indx]}`;
   }
 }
 
@@ -181,13 +180,13 @@ var runcode = function() {
         regDes = Number.parseInt(currentLine[1].replace('$t', ''));
         reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
         immediate = Number.parseInt(currentLine[3].replace('$t', ''));
-        loadWord(regDes, reg1, immediate);
+        loadWord(regDes, reg1, immediate/4);
         break;
       case('sw'):
         regDes = Number.parseInt(currentLine[1].replace('$t', ''));
         reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
         immediate = Number.parseInt(currentLine[3].replace('$t', ''));
-        storeWord(regDes, reg1, immediate);
+        storeWord(regDes, reg1, immediate/4);
         break;
       case('beq'):
         reg1 = Number.parseInt(currentLine[1].replace('$t', ''));
