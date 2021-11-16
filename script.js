@@ -1,7 +1,7 @@
 var registerValues = [0, 0, 0, 0, 0, 0, 0, 0];
-var MAX_INSTRUCTIONS = 16; // we have a max of 16 instructions, change if you'd like more
+var MAX_INSTRUCTIONS = 20; // we have a max of 16 instructions, change if you'd like more
 var MAX_LOOPS = 1000; // Sets an upper limit to number of loops allowed. Stops infinite loops
-
+var pc = 0;
 
 // Makes memory (RAM) that is 2^address width (16 for danmips)
 var memoryValues = new Array(Math.pow(2, 10)).fill(0);
@@ -108,8 +108,12 @@ var storeWord = function(regDesAddr, regVal, immediateVal){
   registerValues[regDesAddr + immediateVal] = regVal;
 }
 
-var branchOnEqual = function(reg1Idx, reg2Idx, branchLoc){
-  if (registerValues[reg1Idx] === registerValues[reg2Idx]) pc = branchLoc;
+var branchOnEqual = function(reg1Idx, reg2Idx, branchLoc, pc){
+  if (registerValues[reg1Idx] === registerValues[reg2Idx]){ 
+    console.log(`Branching to line ${branchLoc}`);  
+    return branchLoc;
+  }
+  else return pc;
 }
 
 var addImmediate = function(regDesIdx, regIdx, immediateVal){
@@ -117,10 +121,6 @@ var addImmediate = function(regDesIdx, regIdx, immediateVal){
   registerValues[regDesIdx] = registerValues[regIdx] + immediateVal;
 }
 
-// Jump Instruction /////////////////////////////
-var jump = function(immediateVal){
-  pc = immediateVal;
-}
 
 var updateRegisters = function(){
   for (const [indx, val] of poutputs.entries()) {
@@ -138,13 +138,13 @@ var runcode = function() {
   // Gets each line of code, and removes commas as a convenience
   let lines = inputCode.value.split('\n');
   let loopCount = 0;
-  let pc = 0;
+  pc = 0;
   while (pc < MAX_INSTRUCTIONS && loopCount < MAX_LOOPS && pc < lines.length){
     loopCount += 1;
     updateRegisters();
     // Get current instruction
     currentLine = lines[pc].replace(/,/g, '').split(' ');
-    console.log(currentLine);
+    console.log(`Executing line ${pc}`);
 
     switch(currentLine[0]){
       case('add'):
@@ -193,10 +193,10 @@ var runcode = function() {
         reg1 = Number.parseInt(currentLine[1].replace('$t', ''));
         reg2 = Number.parseInt(currentLine[2].replace('$t', ''));
         loc = lines.indexOf(currentLine[3]);
-        storeWord(reg1, reg2, loc);
+        pc = branchOnEqual(reg1, reg2, loc, pc);
         break;
       case('j'):
-        jump(lines.indexOf(currentLine[1]));
+        pc = lines.indexOf(currentLine[1]);
         break;
       case('addi'):
         regDes = Number.parseInt(currentLine[1].replace('$t', ''));
@@ -205,13 +205,10 @@ var runcode = function() {
         addImmediate(regDes, reg1, immediate);
         break;
       default:
-        console.log(currentLine);
-        console.log(currentLine[0]);
-        alert(`Bad instruction: ${currentLine}`);
-        loopCount = MAX_LOOPS;
         break;
     }
     pc++;
     
   }
+  updateRegisters();
 }
