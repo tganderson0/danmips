@@ -14,17 +14,31 @@
       </div>
   
       <div id="output-section" class="section">
-        <p id="zero">$zero</p>
-        <p id="t1">$t1</p>
-        <p id="t2">$t2</p>
-        <p id="t3">$t3</p>
-        <p id="t4">$t4</p>
-        <p id="t5">$t5</p>
-        <p id="t6">$t6</p>
-        <p id="t7">$t7</p>
+        <p id="zero">$0: 0</p>
+        <p id="t1">$1: 0</p>
+        <p id="t2">$2: 0</p>
+        <p id="t3">$3: 0</p>
+        <p id="t4">$4: 0</p>
+        <p id="t5">$5: 0</p>
+        <p id="t6">$6: 0</p>
+        <p id="t7">$7: 0</p>
       </div>
+
+      
     </div>
-    
+    <h2>Commands</h2>
+      <ul>
+        <li>add destReg, reg1, reg2</li>
+        <li>sub destReg, reg1, reg2</li>
+        <li>and destReg, reg1, reg2</li>
+        <li>or destReg, reg1, reg2</li>
+        <li>slt destReg, reg1, reg2</li>
+        <li>lw destReg, addressRegister, offset</li>
+        <li>sw addressRegister, valueRegister, offset</li>
+        <li>beq reg1, reg2, destLabel</li>
+        <li>j destLabel</li>
+        <li>addi destReg, reg1, immediate</li>
+      </ul>
 
 
     <script src="script.js"></script>

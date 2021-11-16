@@ -105,7 +105,7 @@ var loadWord = function(regDesIdx, regMemAddr, immediateVal){
 
 var storeWord = function(regDesAddr, regVal, immediateVal){
   // Set the value at regDesAddr with offset immediateVal to regVal
-  registerValues[regDesAddr + immediateVal] = regVal;
+  memoryValues[regDesAddr + immediateVal] = registerValues[regVal];
 }
 
 var branchOnEqual = function(reg1Idx, reg2Idx, branchLoc, pc){
@@ -143,7 +143,7 @@ var runcode = function() {
     loopCount += 1;
     updateRegisters();
     // Get current instruction
-    currentLine = lines[pc].replace(/,/g, '').split(' ');
+    currentLine = lines[pc].replace(/,/g, '').trim().split(' ');
     console.log(`Executing line ${pc}`);
 
     switch(currentLine[0]){
