@@ -225,6 +225,7 @@ var runcode = function() {
   if (loopCount >= MAX_LOOPS) alert(`Maximum Loops were met: ${loopCount} loops`);
 }
 
+
 var getNbitBinary = function(num, bits){
   let result = num.toString(2);
   while (result.length < bits){
@@ -334,6 +335,13 @@ var convertLineToBinary = function(line, lineNumber, lines){
       break;
     default:
       break;
+  }
+  let decValue = Number.parseInt(binaryOut, 2);
+  
+  if (!Number.isNaN(decValue)){
+    let hexValue = decValue.toString(16);
+    while (hexValue.length < 4) hexValue = "0" + hexValue;
+    binaryOut += ` |<-- Binary | Hex -->| ${hexValue}`;
   }
   return binaryOut;
 }
