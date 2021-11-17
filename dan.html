@@ -15,34 +15,39 @@
       </div>
   
       <div id="output-section" class="section">
-        <p id="zero">$0: 0000000000000000 | 0</p>
-        <p id="t1">$1: 0000000000000000 | 0</p>
-        <p id="t2">$2: 0000000000000000 | 0</p>
-        <p id="t3">$3: 0000000000000000 | 0</p>
-        <p id="t4">$4: 0000000000000000 | 0</p>
-        <p id="t5">$5: 0000000000000000 | 0</p>
-        <p id="t6">$6: 0000000000000000 | 0</p>
-        <p id="t7">$7: 0000000000000000 | 0</p>
+        <p id="zero">$t0: 0000000000000000 | 0</p>
+        <p id="t1">$t1: 0000000000000000 | 0</p>
+        <p id="t2">$t2: 0000000000000000 | 0</p>
+        <p id="t3">$t3: 0000000000000000 | 0</p>
+        <p id="t4">$t4: 0000000000000000 | 0</p>
+        <p id="t5">$t5: 0000000000000000 | 0</p>
+        <p id="t6">$t6: 0000000000000000 | 0</p>
+        <p id="t7">$t7: 0000000000000000 | 0</p>
       </div>
 
       
     </div>
     <h2>Commands</h2>
       <ul>
-        <li>add destReg, reg1, reg2</li>
-        <li>sub destReg, reg1, reg2</li>
-        <li>and destReg, reg1, reg2</li>
-        <li>or destReg, reg1, reg2</li>
-        <li>slt destReg, reg1, reg2</li>
-        <li>lw destReg, addressRegister, offset</li>
-        <li>sw addressRegister, valueRegister, offset</li>
-        <li>beq reg1, reg2, destLabel</li>
-        <li>j destLabel</li>
-        <li>addi destReg, reg1, immediate</li>
+        <li><strong>add</strong> destReg, reg1, reg2</li>
+        <li><strong>sub</strong> destReg, reg1, reg2</li>
+        <li><strong>and</strong> destReg, reg1, reg2</li>
+        <li><strong>or</strong> destReg, reg1, reg2</li>
+        <li><strong>slt</strong> destReg, reg1, reg2</li>
+        <li><strong>lw</strong> destReg, addressRegister, offset</li>
+        <li><strong>sw</strong> addressRegister, valueRegister, offset</li>
+        <li><strong>beq</strong> reg1, reg2, destLabel</li>
+        <li><strong>j</strong> destLabel</li>
+        <li><strong>addi</strong> destReg, reg1, immediate</li>
       </ul>
       <p>Please note, for loading and storing, the program will be angry if you don't do offsets in multiples of 4</p>
-      
-      <h2>Binary Output WIP</h2>
+      <p>
+        Additionally, while this will convert the DanMIPS code into binary, 
+        I do not have it working to convert into hex. 
+        The conversion at this point should be fairly easy though, just split the thing in half and make it hex
+      </p>
+      <h2>Binary Output (WIP)</h2>
+      <h3>All operations have been tested, but not confirmed with Dr. Watson</h3>
       <ul id="binaryOutput">
       </ul>
 

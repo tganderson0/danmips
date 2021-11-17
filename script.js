@@ -123,7 +123,7 @@ var addImmediate = function(regDesIdx, regIdx, immediateVal){
 var updateRegisters = function(){
   // Largest 16 bit number is 6 digits
   for (const [indx, val] of poutputs.entries()) {
-    val.textContent = `$${indx}: ${get16bitBinary(registerValues[indx])} | ${registerValues[indx]}`;
+    val.textContent = `$t${indx}: ${get16bitBinary(registerValues[indx])} | ${registerValues[indx]}`;
   }
 }
 
@@ -210,6 +210,7 @@ var runcode = function() {
     
   }
   updateRegisters();
+  if (loopCount >= MAX_LOOPS) alert(`Maximum Loops were met: ${loopCount} loops`);
 }
 
 var getNbitBinary = function(num, bits){
@@ -220,7 +221,7 @@ var getNbitBinary = function(num, bits){
   return result;
 }
 
-var convertLineToBinary = function(line, lineNumber){
+var convertLineToBinary = function(line, lineNumber, lines){
   currentLine = line.replace(/,/g, '').trim().split(' ');
   let binaryOut = "";
   switch(currentLine[0]){
@@ -281,47 +282,43 @@ var convertLineToBinary = function(line, lineNumber){
       reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
       immediate = Number.parseInt(currentLine[3].replace('$t', ''));
       binaryOut += "0010";
-      binaryOut += getNbitBinary(regDes, 3);
       binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(regDes, 3);
       binaryOut += getNbitBinary(immediate, 6);
-      binaryOut += "010";
       break;
     case('sw'):
       regDes = Number.parseInt(currentLine[1].replace('$t', ''));
       reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
       immediate = Number.parseInt(currentLine[3].replace('$t', ''));
       binaryOut += "0011";
-      binaryOut += getNbitBinary(regDes, 3);
       binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(regDes, 3);
       binaryOut += getNbitBinary(immediate, 6);
-      binaryOut += "010";
       break;
     case('beq'):
       reg1 = Number.parseInt(currentLine[1].replace('$t', ''));
       reg2 = Number.parseInt(currentLine[2].replace('$t', ''));
       loc = lines.indexOf(currentLine[3]);
       difference = (lineNumber - loc) // This gets the number of lines we should move back, with the modification to make it 4
+      console.log(difference)
       binaryOut += "0100";
       binaryOut += getNbitBinary(reg1, 3);
       binaryOut += getNbitBinary(reg2, 3);
       binaryOut += getNbitBinary(difference, 6);
-      binaryOut += "110";
       break;
     case('j'):
       loc = lines.indexOf(currentLine[1]);
-      difference = (lineNumber - loc);
       binaryOut += "0101";
-      binaryOut += getNbitBinary(difference, 12);
+      binaryOut += getNbitBinary(loc, 12);
       break;
     case('addi'):
       regDes = Number.parseInt(currentLine[1].replace('$t', ''));
       reg1 = Number.parseInt(currentLine[2].replace('$t', ''));
       immediate = Number.parseInt(currentLine[3].replace('$t', ''));
       binaryOut += "0111";
-      binaryOut += getNbitBinary(regDes, 3);
       binaryOut += getNbitBinary(reg1, 3);
+      binaryOut += getNbitBinary(regDes, 3);
       binaryOut += getNbitBinary(immediate, 6);
-      binaryOut += "010";
       break;
     default:
       break;
@@ -334,7 +331,7 @@ var convertCommandsToBinary = function(){
   let ul = document.querySelector("#binaryOutput");
   ul.innerHTML = ''; // Remove old output
   for (const [indx, val] of lines.entries()) {
-    let lineBinary = convertLineToBinary(val, indx);
+    let lineBinary = convertLineToBinary(val, indx, lines);
     if (lineBinary.length < 3) continue;
     let li = document.createElement('li');
     li.textContent = lineBinary;
