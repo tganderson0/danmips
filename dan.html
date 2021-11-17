@@ -15,6 +15,7 @@
       </div>
   
       <div id="output-section" class="section">
+        <h3>Registers</h3>
         <p id="zero">$t0: 0000000000000000 | 0</p>
         <p id="t1">$t1: 0000000000000000 | 0</p>
         <p id="t2">$t2: 0000000000000000 | 0</p>
@@ -34,17 +35,20 @@
         <li><strong>and</strong> destReg, reg1, reg2</li>
         <li><strong>or</strong> destReg, reg1, reg2</li>
         <li><strong>slt</strong> destReg, reg1, reg2</li>
-        <li><strong>lw</strong> destReg, addressRegister, offset</li>
-        <li><strong>sw</strong> addressRegister, valueRegister, offset</li>
+        <li><strong>lw</strong> destReg, addressRegister, offset ||| NOTE: (this one is basically lw destReg, offset(addressRegister))</li>
+        <li><strong>sw</strong> addressRegister, valueRegister, offset ||| NOTE: (this one is sw valueRegister, offset(addressRegister))</li>
         <li><strong>beq</strong> reg1, reg2, destLabel</li>
         <li><strong>j</strong> destLabel</li>
         <li><strong>addi</strong> destReg, reg1, immediate</li>
         <li><strong>print</strong> register (prints value of register to console, for debugging, not used in binary output)</li>
+        <li><strong>printmem</strong> register, offset (prints value in memory at offset from register, like if you could say print 4($t0)), also ignored in binary output</li>
       </ul>
-      <p>Please note, for loading and storing, the program will be angry if you don't do offsets in multiples of 4</p>
+
+      <h2>Notes</h2>
+      <p>Please note, for loading and storing, the program will be angry if you don't do offsets in multiples of 4, even though internally RAM is done as an array. This is supposed to simulate as if it were hardware</p>
       <p>
         Additionally, while this will convert the DanMIPS code into binary, 
-        I do not have it working to convert into hex. 
+        I do not have it working to convert into hex with the splitting. 
         The conversion at this point should be fairly easy though, just split the thing in half and make it hex
       </p>
       <h2>Binary Output (WIP)</h2>

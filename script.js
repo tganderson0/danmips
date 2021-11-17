@@ -8,7 +8,7 @@ var memoryValues = new Array(Math.pow(2, 10)).fill(0);
 var inputCode = document.querySelector("#code-input");
 
 inputCode.value = 
-"# Simple Fibonacci \naddi $t1, $t1, 1 \nadd $t2, $t1, $t0 \nadd $t3, $t2, $t1 \nadd $t4, $t3, $t2 \nadd $t5, $t4, $t3 \nadd $t6, $t5, $t4 \nadd $t7, $t6, $t5 \nprint $t7";
+"# Simple Fibonacci with jumps and branches\nj fibonacci\n\noutput\n  print $t7\n  printmem $t0, 4\n  j end\n\nfibonacci\n\n  addi $t1, $t1, 1\n  add $t2, $t1, $t0\n  add $t3, $t2, $t1\n  add $t4, $t3, $t2\n  add $t5, $t4, $t3\n  add $t6, $t5, $t4\n  add $t7, $t6, $t5\n  sw $t0, $t7, 4\n  beq $t0, $t0, output\n\nend\n"
 // Get <p> elements for updating
 console.log("Loaded")
 
@@ -207,7 +207,14 @@ var runcode = function() {
         break;
       case('print'):
         regDes = Number.parseInt(currentLine[1].replace('$t', ''));
-        console.log(`Data Logged: ${registerValues[regDes]}`);
+        console.log(`$t${regDes} = ${registerValues[regDes]}`);
+        break;
+      case('printmem'):
+        console.log(currentLine);
+        reg = Number.parseInt(currentLine[1].replace('$t', ''));
+        offset = Number.parseInt(currentLine[2].replace('$t', ''));
+        console.log(`${offset}($t${reg}) = ${memoryValues[reg + offset/4]}`);
+        break;
       default:
         break;
     }
