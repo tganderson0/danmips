@@ -7,6 +7,8 @@ var pc = 0;
 var memoryValues = new Array(Math.pow(2, 10)).fill(0);
 var inputCode = document.querySelector("#code-input");
 
+inputCode.value = 
+"# Simple Fibonacci \naddi $t1, $t1, 1 \nadd $t2, $t1, $t0 \nadd $t3, $t2, $t1 \nadd $t4, $t3, $t2 \nadd $t5, $t4, $t3 \nadd $t6, $t5, $t4 \nadd $t7, $t6, $t5 \nprint $t7";
 // Get <p> elements for updating
 console.log("Loaded")
 
@@ -203,6 +205,9 @@ var runcode = function() {
         immediate = Number.parseInt(currentLine[3].replace('$t', ''));
         addImmediate(regDes, reg1, immediate);
         break;
+      case('print'):
+        regDes = Number.parseInt(currentLine[1].replace('$t', ''));
+        console.log(`Data Logged: ${registerValues[regDes]}`);
       default:
         break;
     }
