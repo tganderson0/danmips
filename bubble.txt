@@ -1,0 +1,60 @@
+# values 6, 20, 17, 1, 8
+# Store values in memory
+addi $t1, $t0, 6
+sw $t0, $t1, 0
+addi $t1, $t0, 20
+sw $t0, $t1, 4
+addi $t1, $t0, 17
+sw $t0, $t1, 8
+addi $t1, $t0, 1
+sw $t0, $t1, 12
+addi $t1, $t0, 8
+sw $t0, $t1, 16
+
+
+
+
+	# Load array into t0
+	la $t0, valuesToSort
+	
+	# Create necessary 'global' values
+	la $t1, ($t0) # Set up begin tracker
+	la $t2, 36($t0) # Set up end tracker
+	j start
+	
+start
+	# Full end condition
+	beq $t2, $t0, end # if prior condition met, goto end
+	
+	# Start over loop condition
+	sle $t3, $t2, $t1 # set t3 to 1 if end <= begin
+	bne $t3, $zero, nextLoop # if prior condition met, goto end
+	
+	# Save value of current and current+1 to registers
+	lw $t4, 0($t1) # current value
+	lw $t5, 4($t1) # next value
+	
+	sle $t3, $t5, $t4 # if next value is less than current value set t3 to 1
+	bne $t3, $zero, swap # if next value was less than zero, goto swap
+	
+	la $t1, 4($t1)
+	j start
+
+
+nextLoop:
+	la $t1, ($t0)
+	la $t2, -4($t2)
+	j start
+	
+swap:
+	# Perform swap of current and next values
+	lw $t6, 0($t1) # Save current to temporary
+	lw $t5, 4($t1) # Save next to temporary
+	sw $t5, 0($t1) # Set current to next
+	sw $t6, 4($t1) # Set next to old current
+	
+	la $t1, 4($t1)
+		
+	j start # go back to loop
+	
+end:

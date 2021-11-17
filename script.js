@@ -1,5 +1,5 @@
 var registerValues = [0, 0, 0, 0, 0, 0, 0, 0];
-var MAX_INSTRUCTIONS = 20; // we have a max of 16 instructions, change if you'd like more
+var MAX_INSTRUCTIONS = 60; // we have a max of n instructions, change if you'd like more
 var MAX_LOOPS = 1000; // Sets an upper limit to number of loops allowed. Stops infinite loops
 var pc = 0;
 
