@@ -334,10 +334,11 @@ var convertCommandsToBinary = function(){
   let ul = document.querySelector("#binaryOutput");
   ul.innerHTML = ''; // Remove old output
   for (const [indx, val] of lines.entries()) {
-    if (val.length < 2) continue;
     let lineBinary = convertLineToBinary(val, indx);
+    if (lineBinary.length < 3) continue;
     let li = document.createElement('li');
     li.textContent = lineBinary;
-    ul.insertBefore(li, ul.firstChild);
+    ul.appendChild(li);
+    //ul.insertBefore(li, ul.firstChild);
   }
 }
