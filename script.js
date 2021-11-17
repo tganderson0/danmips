@@ -334,6 +334,7 @@ var convertCommandsToBinary = function(){
   let ul = document.querySelector("#binaryOutput");
   ul.innerHTML = ''; // Remove old output
   for (const [indx, val] of lines.entries()) {
+    if (val.length < 2) continue;
     let lineBinary = convertLineToBinary(val, indx);
     let li = document.createElement('li');
     li.textContent = lineBinary;
