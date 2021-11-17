@@ -1,7 +1,0 @@
-addi $t7, $t0, 10
-sw $t1, $t7, 4
-addi $t7, $t7, -5
-sw $t1, $t7, 0
-
-lw $t2, $t1, 0
-lw $t3, $t1, 4
