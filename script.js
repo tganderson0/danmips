@@ -225,13 +225,28 @@ var runcode = function() {
   if (loopCount >= MAX_LOOPS) alert(`Maximum Loops were met: ${loopCount} loops`);
 }
 
+var getNumOfPreviousLabels = function(lineNumber, lines){
+  let operations = ['add', 'sub', 'and', 'or', 'slt', 'lw', 'sw', 'beq', 'j', 'addi'];
+  let count = 0;
+  for (let i = 0; i < lineNumber && i < lines.length; i++){
+    if (!operations.includes(lines[i].replace(/,/g, '').trim().split(' ')[0])){
+      count++;
+    }
+  }
+  return count;
+}
 
 var getNbitBinary = function(num, bits){
-  let result = num.toString(2);
-  while (result.length < bits){
-    result = "0" + result;
+  if (num >= 0){
+    let result = num.toString(2);
+    while (result.length < bits){
+      result = "0" + result;
+    }
+    return result;
   }
-  return result;
+  let result = (num >>> 0).toString(2);
+  // console.log(result.slice(result.length - bits, result.length));
+  return result.slice(result.length - bits, result.length);
 }
 
 var convertLineToBinary = function(line, lineNumber, lines){
@@ -311,16 +326,18 @@ var convertLineToBinary = function(line, lineNumber, lines){
     case('beq'):
       reg1 = Number.parseInt(currentLine[1].replace('$t', ''));
       reg2 = Number.parseInt(currentLine[2].replace('$t', ''));
-      loc = lines.indexOf(currentLine[3]) - 1;
-      difference = (loc - lineNumber) // This gets the number of lines we should move back, with the modification to make it 4
-      console.log(difference)
+      loc = lines.indexOf(currentLine[3]);
+      console.log(`The true line # of loc is ${(loc - getNumOfPreviousLabels(loc, lines))}\nThe true line # of lineNumber is ${(lineNumber - getNumOfPreviousLabels(lineNumber, lines))}`);
+      difference = ((loc - getNumOfPreviousLabels(loc, lines)) - 1 - (lineNumber - getNumOfPreviousLabels(lineNumber, lines))); // This gets the number of lines we should move back, with the modification to make it 4
+      console.log(`The difference is ${difference}`);
       binaryOut += "0100";
       binaryOut += getNbitBinary(reg1, 3);
       binaryOut += getNbitBinary(reg2, 3);
       binaryOut += getNbitBinary(difference, 6);
       break;
     case('j'):
-      loc = lines.indexOf(currentLine[1]) - 1;
+      loc = lines.indexOf(currentLine[1]);
+      loc = loc - getNumOfPreviousLabels(loc, lines);
       binaryOut += "0101";
       binaryOut += getNbitBinary(loc, 12);
       break;
@@ -352,7 +369,10 @@ var convertCommandsToBinary = function(){
   ul.innerHTML = ''; // Remove old output
   for (const [indx, val] of lines.entries()) {
     let lineBinary = convertLineToBinary(val, indx, lines);
-    if (lineBinary.length < 3) continue;
+    if (lineBinary.length < 3){ // if this was a label row
+      continue;
+    } 
+    
     let li = document.createElement('li');
     li.textContent = lineBinary;
     ul.appendChild(li);
