@@ -311,8 +311,8 @@ var convertLineToBinary = function(line, lineNumber, lines){
     case('beq'):
       reg1 = Number.parseInt(currentLine[1].replace('$t', ''));
       reg2 = Number.parseInt(currentLine[2].replace('$t', ''));
-      loc = lines.indexOf(currentLine[3]);
-      difference = (lineNumber - loc) // This gets the number of lines we should move back, with the modification to make it 4
+      loc = lines.indexOf(currentLine[3]) - 1;
+      difference = (loc - lineNumber) // This gets the number of lines we should move back, with the modification to make it 4
       console.log(difference)
       binaryOut += "0100";
       binaryOut += getNbitBinary(reg1, 3);
@@ -320,7 +320,7 @@ var convertLineToBinary = function(line, lineNumber, lines){
       binaryOut += getNbitBinary(difference, 6);
       break;
     case('j'):
-      loc = lines.indexOf(currentLine[1]);
+      loc = lines.indexOf(currentLine[1]) - 1;
       binaryOut += "0101";
       binaryOut += getNbitBinary(loc, 12);
       break;
