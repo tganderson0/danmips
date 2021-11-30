@@ -11,3 +11,5 @@ The program should be very similar to the MARS MIPS simulator, with a few differ
 ## Bugs
 
 If you notice any bugs or things that might be nice to add in, let me know at tganderson0@gmail.com !
+
+NEGATIVE NUMBERS LEAD TO INCORRECT OUTPUT!! CHECK THAT IF THERES ODD OUTPUT
